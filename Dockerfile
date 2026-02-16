@@ -27,7 +27,7 @@ RUN echo 'server { \
     root /usr/share/nginx/html; \
     index index.html; \
     location / { \
-        try_files $uri /index.html; \
+        try_files $uri $uri/ /index.html; \
     } \
     # Enable gzip compression \
     gzip on; \
