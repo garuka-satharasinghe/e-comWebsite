@@ -14,7 +14,9 @@ export const productService = {
       const response = await api.get('/product');
       return response.data;
     } catch (error) {
-      console.error('Error fetching products:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching products:', error);
+      }
       throw error;
     }
   },
@@ -27,7 +29,9 @@ export const productService = {
       const response = await api.get(`/product/${id}`);
       return response.data;
     } catch (error) {
-      console.error(`Error fetching product ${id}:`, error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Error fetching product ${id}:`, error);
+      }
       throw error;
     }
   },
@@ -40,7 +44,9 @@ export const productService = {
       const response = await api.post('/product', productData);
       return response.data;
     } catch (error) {
-      console.error('Error creating product:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error creating product:', error);
+      }
       throw error;
     }
   },
@@ -53,7 +59,9 @@ export const productService = {
       const response = await api.put(`/product/${id}`, productData);
       return response.data;
     } catch (error) {
-      console.error(`Error updating product ${id}:`, error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Error updating product ${id}:`, error);
+      }
       throw error;
     }
   },
@@ -66,7 +74,9 @@ export const productService = {
       const response = await api.delete(`/product/${id}`);
       return response.data;
     } catch (error) {
-      console.error(`Error deleting product ${id}:`, error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Error deleting product ${id}:`, error);
+      }
       throw error;
     }
   },

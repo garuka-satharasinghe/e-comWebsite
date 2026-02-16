@@ -14,7 +14,9 @@ export const authService = {
       const response = await api.post('/auth/login', credentials);
       return response.data;
     } catch (error) {
-      console.error('Login error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Login error:', error);
+      }
       throw error;
     }
   },
@@ -27,7 +29,9 @@ export const authService = {
       const response = await api.post('/auth/register', userData);
       return response.data;
     } catch (error) {
-      console.error('Registration error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Registration error:', error);
+      }
       throw error;
     }
   },
@@ -43,7 +47,9 @@ export const authService = {
       // localStorage.removeItem('authToken');
       return response.data;
     } catch (error) {
-      console.error('Logout error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Logout error:', error);
+      }
       throw error;
     }
   },
@@ -56,7 +62,9 @@ export const authService = {
       const response = await api.get('/auth/profile');
       return response.data;
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching user profile:', error);
+      }
       throw error;
     }
   },

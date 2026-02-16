@@ -22,7 +22,9 @@ function ProductList() {
       setProducts(data);
     } catch (err) {
       setError('Failed to load products. Please try again later.');
-      console.error(err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(err);
+      }
     } finally {
       setLoading(false);
     }
