@@ -13,5 +13,3 @@ export const ROUTES = {
   ORDERS: '/orders',
   ADD_PRODUCT: '/add-product',
 };
-
-export default ROUTES;

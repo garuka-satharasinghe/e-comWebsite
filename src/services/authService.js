@@ -42,9 +42,6 @@ export const authService = {
   logout: async () => {
     try {
       const response = await api.post('/auth/logout');
-      // Note: Token management should be consistent with login/register
-      // Clear authToken if your auth system uses it
-      // localStorage.removeItem('authToken');
       return response.data;
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
@@ -69,5 +66,3 @@ export const authService = {
     }
   },
 };
-
-export default authService;

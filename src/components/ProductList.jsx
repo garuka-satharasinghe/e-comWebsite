@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import productService from '../services/productService';
+import { productService } from '../services/productService';
 
 /**
  * Example Product List Component
