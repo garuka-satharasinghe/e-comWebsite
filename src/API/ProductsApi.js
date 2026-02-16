@@ -66,7 +66,7 @@ export const ProductGet = (limit = 20, offset = 0) => {
  */
 export const SellerOrders = (SId) => {
     return apiClient.get('/api/v1/order/', {
-        data: { SId },
+        params: { SId },
         timeout: 10000,
     });
 };
@@ -118,6 +118,7 @@ const ProductsApi = {
     SellerOrders,
     GetProductDetails,
     PurchaseProduct,
+    calculateDiscount,
 };
 
 export default ProductsApi;
