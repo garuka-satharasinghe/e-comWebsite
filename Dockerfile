@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies with legacy peer deps for compatibility
-RUN npm ci --legacy-peer-deps --prefer-offline
+RUN npm ci --legacy-peer-deps
 
 # Copy source code
 COPY . .
