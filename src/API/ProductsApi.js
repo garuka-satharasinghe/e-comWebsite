@@ -62,7 +62,7 @@ export const ProductGet=(limit=20,offset=0)=> {
 export const SellerOrders =(SId)=> {
     return apiClient.get('/api/v1/order/', {
         timeout: 10000,
-        data: JSON.stringify({SId})
+        params: {SId}
     })
 }
 
