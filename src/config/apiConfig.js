@@ -13,18 +13,24 @@
 export const getApiUrl = () => {
   // Check for Choreo mounted config first
   if (window?.configs?.apiUrl) {
-    console.log('Using Choreo-mounted API URL:', window.configs.apiUrl);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Using Choreo-mounted API URL:', window.configs.apiUrl);
+    }
     return window.configs.apiUrl;
   }
   
   // Fallback to environment variable
   if (process.env.REACT_APP_API_URL) {
-    console.log('Using environment variable API URL:', process.env.REACT_APP_API_URL);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Using environment variable API URL:', process.env.REACT_APP_API_URL);
+    }
     return process.env.REACT_APP_API_URL;
   }
   
   // Default for local development
-  console.log('Using default localhost API URL');
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Using default localhost API URL');
+  }
   return 'http://localhost:8080/api/v1';
 };
 
