@@ -1,0 +1,17 @@
+# Choreo Component Configuration
+apiVersion: core.choreo.dev/v1beta1
+kind: Component
+spec:
+  displayName: E-Commerce Website
+  type: WebApplication
+  
+  build:
+    buildType: Dockerfile
+    dockerContext: .
+    dockerfile: Dockerfile
+  
+  containerPort: 80
+  
+  healthCheck:
+    path: /
+    port: 80
