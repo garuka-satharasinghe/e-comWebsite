@@ -37,7 +37,9 @@ api.interceptors.response.use(
     // Handle common errors
     if (error.response) {
       // Server responded with error status
-      console.error('API Error:', error.response.status, error.response.data);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('API Error:', error.response.status, error.response.data);
+      }
       
       // Handle 401 Unauthorized - redirect to login
       if (error.response.status === 401) {
@@ -48,10 +50,14 @@ api.interceptors.response.use(
       }
     } else if (error.request) {
       // Request made but no response received
-      console.error('Network Error: No response from server');
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Network Error: No response from server');
+      }
     } else {
       // Something else happened
-      console.error('Error:', error.message);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error:', error.message);
+      }
     }
     
     return Promise.reject(error);
