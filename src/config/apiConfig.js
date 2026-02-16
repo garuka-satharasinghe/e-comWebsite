@@ -1,14 +1,14 @@
 /**
- * API Configuration
- * Reads from Choreo-mounted config file (window.configs) with fallbacks
+ * API Configuration for Choreo Deployment
+ * 
+ * Priority:
+ * 1. Choreo file-mounted config (window.configs.apiUrl)
+ * 2. Environment variable (REACT_APP_BASE_URL)
+ * 3. Default localhost for development
  */
 
 /**
  * Get the API base URL
- * Priority: 
- * 1. Choreo file-mounted config (window.configs.apiUrl)
- * 2. Environment variable (REACT_APP_API_URL)
- * 3. Default localhost for development
  */
 export const getApiUrl = () => {
   // Check for Choreo mounted config first
@@ -19,40 +19,43 @@ export const getApiUrl = () => {
     return window.configs.apiUrl;
   }
   
-  // Fallback to environment variable
-  if (process.env.REACT_APP_API_URL) {
+  // Fallback to environment variable (for local dev with .env.local)
+  if (process.env.REACT_APP_BASE_URL) {
     if (process.env.NODE_ENV === 'development') {
-      console.log('Using environment variable API URL:', process.env.REACT_APP_API_URL);
+      console.log('Using environment variable API URL:', process.env.REACT_APP_BASE_URL);
     }
-    return process.env.REACT_APP_API_URL;
+    return process.env.REACT_APP_BASE_URL;
   }
   
   // Default for local development
   if (process.env.NODE_ENV === 'development') {
     console.log('Using default localhost API URL');
   }
-  return 'http://localhost:8080/api/v1';
+  return 'http://localhost:8080';
 };
 
 // Export the resolved API URL
 export const API_BASE_URL = getApiUrl();
 
-// Export full API paths for convenience
+// Export full API endpoint paths for convenience
 export const API_ENDPOINTS = {
   // Auth endpoints
-  LOGIN: `${API_BASE_URL}/auth/login`,
-  REGISTER: `${API_BASE_URL}/auth/register`,
-  LOGOUT: `${API_BASE_URL}/auth/logout`,
+  LOGIN: `${API_BASE_URL}/api/v1/auth/login`,
+  LOGOUT: `${API_BASE_URL}/api/v1/auth/logout`,
+  USER_REGISTER: `${API_BASE_URL}/api/v1/auth/userReg`,
+  SELLER_REGISTER: `${API_BASE_URL}/api/v1/auth/sellerReg`,
+  TEST: `${API_BASE_URL}/api/v1/auth/test`,
   
   // Product endpoints
-  PRODUCTS: `${API_BASE_URL}/product`,
-  PRODUCT_BY_ID: (id) => `${API_BASE_URL}/product/${id}`,
+  PRODUCTS: `${API_BASE_URL}/api/v1/product/getProducts`,
+  PRODUCT_DETAILS: `${API_BASE_URL}/api/v1/product/getProductDetails`,
+  PRODUCT_ADD: `${API_BASE_URL}/api/v1/product/add`,
   
   // Purchase endpoints
-  PURCHASES: `${API_BASE_URL}/purchase`,
-  PURCHASE_BY_ID: (id) => `${API_BASE_URL}/purchase/${id}`,
+  PURCHASE: `${API_BASE_URL}/api/v1/purchase`,
   
   // Order endpoints
-  ORDERS: `${API_BASE_URL}/order`,
-  ORDER_BY_ID: (id) => `${API_BASE_URL}/order/${id}`,
+  ORDERS: `${API_BASE_URL}/api/v1/order`,
+  CUSTOMER_ORDERS: `${API_BASE_URL}/api/v1/order/customer`,
+  SET_ORDER_STATE: (id) => `${API_BASE_URL}/api/v1/order/setState/${id}`,
 };

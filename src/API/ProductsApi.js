@@ -1,9 +1,20 @@
-import React from 'react'
-import axios from 'axios'
-import moment from 'moment'
+import axios from 'axios';
+import moment from 'moment';
+import { API_BASE_URL } from '../config/apiConfig';
 
+// Create axios instance with base configuration
+const apiClient = axios.create({
+    baseURL: API_BASE_URL,
+    withCredentials: true,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
 
-export const ProductAdd=( Category, AvailableUnits, DisplayName, Description, UnitPrice, Discount, DiscountEndDate,imgs )=> {
+/**
+ * Add a new product (sellers only)
+ */
+export const ProductAdd = (Category, AvailableUnits, DisplayName, Description, UnitPrice, Discount, DiscountEndDate, imgs) => {
     const formData = new FormData();
     formData.append('Category', Category);
     formData.append('AvailableUnits', AvailableUnits);
@@ -17,134 +28,97 @@ export const ProductAdd=( Category, AvailableUnits, DisplayName, Description, Un
         formData.append(`imgs`, imgs[i]);
     }
     
-    return axios({
-        baseURL: process.env.REACT_APP_BASE_URL,
-        url: "/api/v1/product/add",
-        method: "POST",
+    return apiClient.post('/api/v1/product/add', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
-            "Access-Control-Allow-Origin": process.env.REACT_APP_BASE_URL,
-            "Access-Control-Allow-Credentials": true,
         },
-        data: formData,
+    });
+};
 
-    })
-}
-
-export const SetSellerOrderStatus = (id,state)=>{
-    return axios({
-        baseURL: process.env.REACT_APP_BASE_URL,
+/**
+ * Set seller order status
+ */
+export const SetSellerOrderStatus = (id, state) => {
+    return apiClient.post(`/api/v1/order/setState/${id}`, { state }, {
         timeout: 10000,
-        url: `/api/v1/order/setState/${id}`,
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Origin": process.env.REACT_APP_BASE_URL,
-            "Access-Control-Allow-Credentials": true,
-        },
-        data: JSON.stringify({state})
-    })
-}
+    });
+};
 
-export const CustomerOrdersState = ()=>{
-    return axios({
-        baseURL: process.env.REACT_APP_BASE_URL,
-        url: `/api/v1/order/customer`,
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Origin":process.env.REACT_APP_BASE_URL,
-            "Access-Control-Allow-Credentials": true,
-        },
-    })
-}
+/**
+ * Get customer orders state
+ */
+export const CustomerOrdersState = () => {
+    return apiClient.get('/api/v1/order/customer');
+};
 
-export const ProductGet=(limit=20,offset=0)=> {
-    return axios({
-        baseURL: process.env.REACT_APP_BASE_URL,
-        url: "/api/v1/product/getProducts",
+/**
+ * Get products with pagination
+ */
+export const ProductGet = (limit = 20, offset = 0) => {
+    return apiClient.get('/api/v1/product/getProducts', {
+        params: { limit, offset },
         timeout: 10000,
-        method: "GET",
-        headers: {
-            "Access-Control-Allow-Origin": process.env.REACT_APP_BASE_URL,
-            'Content-Type': 'application/json',
-        },
-        params:{limit,offset}
-    })
-}
+    });
+};
 
-export const SellerOrders =(SId)=> {
-    return axios({
-        baseURL: process.env.REACT_APP_BASE_URL,
+/**
+ * Get seller orders
+ */
+export const SellerOrders = (SId) => {
+    return apiClient.get('/api/v1/order/', {
+        params: { SId },
         timeout: 10000,
-        url: '/api/v1/order/',
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Origin": process.env.REACT_APP_BASE_URL,
-            "Access-Control-Allow-Credentials": true,
-        },
-        data: JSON.stringify({SId})
-    })
-}
+    });
+};
 
-export const GetProductDetails=(productId)=> {
-    return axios({
-        baseURL: process.env.REACT_APP_BASE_URL,
-        url: `/api/v1/product/getProductDetails?productId=${productId}`,
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Origin": process.env.REACT_APP_BASE_URL,
-            "Access-Control-Allow-Credentials": true,
-        },
-    })
-}
+/**
+ * Get product details by ID
+ */
+export const GetProductDetails = (productId) => {
+    return apiClient.get(`/api/v1/product/getProductDetails?productId=${productId}`);
+};
 
-export const PurchaseProduct = (ProductId,Units)=>{
-    return axios({
-        baseURL: process.env.REACT_APP_BASE_URL,
-        url: `/api/v1/purchase`,
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Origin": process.env.REACT_APP_BASE_URL,
-            "Access-Control-Allow-Credentials": true,
-        },
-        data: JSON.stringify({ProductId,Units})
-    })
-}
+/**
+ * Purchase a product
+ */
+export const PurchaseProduct = (ProductId, Units) => {
+    return apiClient.post('/api/v1/purchase', { ProductId, Units });
+};
 
-export const calculateDiscount=(unitprice,discountPersentage,DiscountEndDate)=>{
-    const discountEnd  = moment(DiscountEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+/**
+ * Calculate discount price and remaining time
+ */
+export const calculateDiscount = (unitprice, discountPersentage, DiscountEndDate) => {
+    const discountEnd = moment(DiscountEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
     const now = moment();
-    if(discountEnd.isValid() && now.isBefore(discountEnd) && discountPersentage>0 && discountPersentage<=100){
+    if (discountEnd.isValid() && now.isBefore(discountEnd) && discountPersentage > 0 && discountPersentage <= 100) {
         console.log("discount valied");
-        let discountRemains = discountEnd.diff(now,'days');
+        let discountRemains = discountEnd.diff(now, 'days');
         let timeUnit = " days";
-        if(discountRemains===0){
-            discountRemains = discountEnd.diff(now,'hours');
+        if (discountRemains === 0) {
+            discountRemains = discountEnd.diff(now, 'hours');
             timeUnit = " hours";
-            if(discountRemains===0){
-                return {price:unitprice,isDiscountApplied:false,remainingDays:"0 days"};
+            if (discountRemains === 0) {
+                return { price: unitprice, isDiscountApplied: false, remainingDays: "0 days" };
             }
         }
-        return {price:(unitprice * (100-discountPersentage) / 100),isDiscountApplied:true ,remainingDays:discountRemains+timeUnit};
+        return { price: (unitprice * (100 - discountPersentage) / 100), isDiscountApplied: true, remainingDays: discountRemains + timeUnit };
     }
-    else{
+    else {
         console.log("discount not valied");
-        return {price:unitprice,isDiscountApplied:false,remainingDays:0};
+        return { price: unitprice, isDiscountApplied: false, remainingDays: 0 };
     }
-    
-    
-}
+};
 
+const ProductsApi = {
+    ProductAdd,
+    SetSellerOrderStatus,
+    CustomerOrdersState,
+    ProductGet,
+    SellerOrders,
+    GetProductDetails,
+    PurchaseProduct,
+    calculateDiscount,
+};
 
-
-export default function ProductsApi() {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+export default ProductsApi;
