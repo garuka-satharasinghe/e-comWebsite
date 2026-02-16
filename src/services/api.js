@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../config/apiConfig';
+import { ROUTES } from '../config/routes';
 
 /**
  * Axios instance configured for Choreo backend
@@ -45,8 +46,8 @@ api.interceptors.response.use(
       if (error.response.status === 401) {
         // Clear any stored auth data
         localStorage.removeItem('authToken');
-        // Redirect to login page
-        window.location.href = '/login';
+        // Redirect to login page using defined route
+        window.location.href = ROUTES.LOGIN;
       }
     } else if (error.request) {
       // Request made but no response received
