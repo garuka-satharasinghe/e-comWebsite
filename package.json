@@ -2,6 +2,10 @@
   "name": "e-commerce-app",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
