@@ -26,7 +26,7 @@ const ProductDetails = ({ pid, minimalData = false }) => {
   useEffect(() => {
     if (!minimalData && product?.ProductImgs) {
       const tmpImgs = product.ProductImgs.map(
-        (img) => `${process.env.REACT_APP_BASE_URL}/uploads/` + img.imgUrl
+        (img) => img.imgUrl
       );
       setImgs(tmpImgs);
       setState("loaded");
