@@ -55,7 +55,7 @@ export default function BrowseProducts() {
         let imgs = [];
         if( element.ProductImgs.length>0){
           element.ProductImgs.forEach(ele => {
-            imgs.push(`${process.env.REACT_APP_BASE_URL}/uploads/${ele.imgUrl}`);
+            imgs.push(ele.imgUrl);
           });
         }
         else{
